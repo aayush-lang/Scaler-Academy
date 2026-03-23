@@ -213,6 +213,10 @@
     width: 52px;
     text-align: center;
     outline: none;
+    cursor: text;
+    pointer-events: all;
+    user-select: text;
+    -webkit-user-select: text;
     transition: border-color 0.15s, background 0.15s;
   }
   .inline-input:focus { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.1); }
@@ -223,6 +227,17 @@
   .inline-input.red-inp   { color: #F87171; border-color: rgba(248,113,113,0.25); background: rgba(192,57,43,0.1); }
   .inline-input.red-inp:focus { border-color: #F87171; }
   .deduct-inp { width: 52px; }
+  .inline-input.base-inp {
+    color: var(--gold2);
+    border-color: rgba(232,160,32,0.35);
+    background: rgba(232,160,32,0.08);
+    font-size: 0.82rem;
+    width: 70px;
+  }
+  .inline-input.base-inp:focus { border-color: var(--gold); }
+  /* Hide number input spinners for cleaner look */
+  .inline-input::-webkit-inner-spin-button,
+  .inline-input::-webkit-outer-spin-button { opacity: 0.3; }
 
   /* ── FORMULA BAR ──────────────────────────────────── */
   .formula-bar {
@@ -531,14 +546,18 @@
 
           <!-- Base -->
           <td class="td-cell">
-            <div class="cell-label">Amount / Sale</div>
-            <div class="cell-val gold">₹ Y</div>
+            <div class="cell-label">Amount / Sale (₹)</div>
+            <div class="cell-editable">
+              <span class="cond-prefix">₹</span>
+              <input class="inline-input base-inp" oninput="sanitizeInput(this)" id="base-amount" type="number" value="1500" min="0" step="50" style="width:70px;font-size:0.82rem;" />
+            </div>
+            <div class="cell-label" style="margin-top:4px;color:rgba(232,160,32,0.5)">per net sale</div>
           </td>
 
           <!-- Refund Green -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><span class="cond-prefix">Below </span><input class="inline-input green-inp" id="r-g-cond" type="text" value="10%" /></div>
+            <div class="cell-editable"><span class="cond-prefix">Below </span><input class="inline-input green-inp" oninput="sanitizeInput(this)" id="r-g-cond" type="number" value="10" min="0" max="100" /></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
             <div class="cell-val green">No deduction</div>
           </td>
@@ -546,7 +565,7 @@
           <!-- Attrition Green -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><span class="cond-prefix">Below </span><input class="inline-input green-inp" id="a-g-cond" type="text" value="10%" /></div>
+            <div class="cell-editable"><span class="cond-prefix">Below </span><input class="inline-input green-inp" oninput="sanitizeInput(this)" id="a-g-cond" type="number" value="10" min="0" max="100" /></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
             <div class="cell-val green">No deduction</div>
           </td>
@@ -554,7 +573,7 @@
           <!-- Forecast Green -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><span class="cond-prefix">Above </span><input class="inline-input green-inp" id="f-g-cond" type="text" value="80%" /></div>
+            <div class="cell-editable"><span class="cond-prefix">Above </span><input class="inline-input green-inp" oninput="sanitizeInput(this)" id="f-g-cond" type="number" value="80" min="0" max="100" /></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
             <div class="cell-val green">No deduction</div>
           </td>
@@ -562,7 +581,7 @@
           <!-- Leads Green -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><span class="cond-prefix">Above </span><input class="inline-input green-inp" id="l-g-cond" type="text" value="75%" /></div>
+            <div class="cell-editable"><span class="cond-prefix">Above </span><input class="inline-input green-inp" oninput="sanitizeInput(this)" id="l-g-cond" type="number" value="75" min="0" max="100" /></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
             <div class="cell-val green">No deduction</div>
           </td>
@@ -570,7 +589,7 @@
           <!-- Process Green -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><span class="cond-prefix">Above </span><input class="inline-input green-inp" id="p-g-cond" type="text" value="80%" /></div>
+            <div class="cell-editable"><span class="cond-prefix">Above </span><input class="inline-input green-inp" oninput="sanitizeInput(this)" id="p-g-cond" type="number" value="80" min="0" max="100" /></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
             <div class="cell-val green">No deduction</div>
           </td>
@@ -589,41 +608,41 @@
           <!-- Refund Amber -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><input class="inline-input amber-inp" id="r-a-cond1" type="text" value="10%" style="width:38px"/> <span class="cond-prefix">to</span> <input class="inline-input amber-inp" id="r-a-cond2" type="text" value="20%" style="width:38px"/></div>
+            <div class="cell-editable"><input class="inline-input amber-inp" oninput="sanitizeInput(this)" id="r-a-cond1" type="number" value="10" min="0" max="100" style="width:38px"/> <span class="cond-prefix">to</span> <input class="inline-input amber-inp" oninput="sanitizeInput(this)" id="r-a-cond2" type="number" value="20" min="0" max="100" style="width:38px"/></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
-            <div class="cell-editable"><input class="inline-input amber-inp deduct-inp" id="r-a-ded" type="text" value="10%" /></div>
+            <div class="cell-editable"><input class="inline-input amber-inp deduct-inp" oninput="sanitizeInput(this)" id="r-a-ded" type="number" value="10" min="0" max="100" /><span class="cond-prefix">%</span></div>
           </td>
 
           <!-- Attrition Amber -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><input class="inline-input amber-inp" id="a-a-cond1" type="text" value="10%" style="width:38px"/> <span class="cond-prefix">to</span> <input class="inline-input amber-inp" id="a-a-cond2" type="text" value="15%" style="width:38px"/></div>
+            <div class="cell-editable"><input class="inline-input amber-inp" oninput="sanitizeInput(this)" id="a-a-cond1" type="number" value="10" min="0" max="100" style="width:38px"/> <span class="cond-prefix">to</span> <input class="inline-input amber-inp" oninput="sanitizeInput(this)" id="a-a-cond2" type="number" value="15" min="0" max="100" style="width:38px"/></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
-            <div class="cell-editable"><input class="inline-input amber-inp deduct-inp" id="a-a-ded" type="text" value="10%" /></div>
+            <div class="cell-editable"><input class="inline-input amber-inp deduct-inp" oninput="sanitizeInput(this)" id="a-a-ded" type="number" value="10" min="0" max="100" /><span class="cond-prefix">%</span></div>
           </td>
 
           <!-- Forecast Amber -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><input class="inline-input amber-inp" id="f-a-cond1" type="text" value="65%" style="width:38px"/> <span class="cond-prefix">to</span> <input class="inline-input amber-inp" id="f-a-cond2" type="text" value="80%" style="width:38px"/></div>
+            <div class="cell-editable"><input class="inline-input amber-inp" oninput="sanitizeInput(this)" id="f-a-cond1" type="number" value="65" min="0" max="100" style="width:38px"/> <span class="cond-prefix">to</span> <input class="inline-input amber-inp" oninput="sanitizeInput(this)" id="f-a-cond2" type="number" value="80" min="0" max="100" style="width:38px"/></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
-            <div class="cell-editable"><input class="inline-input amber-inp deduct-inp" id="f-a-ded" type="text" value="10%" /></div>
+            <div class="cell-editable"><input class="inline-input amber-inp deduct-inp" oninput="sanitizeInput(this)" id="f-a-ded" type="number" value="10" min="0" max="100" /><span class="cond-prefix">%</span></div>
           </td>
 
           <!-- Leads Amber -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><input class="inline-input amber-inp" id="l-a-cond1" type="text" value="60%" style="width:38px"/> <span class="cond-prefix">to</span> <input class="inline-input amber-inp" id="l-a-cond2" type="text" value="75%" style="width:38px"/></div>
+            <div class="cell-editable"><input class="inline-input amber-inp" oninput="sanitizeInput(this)" id="l-a-cond1" type="number" value="60" min="0" max="100" style="width:38px"/> <span class="cond-prefix">to</span> <input class="inline-input amber-inp" oninput="sanitizeInput(this)" id="l-a-cond2" type="number" value="75" min="0" max="100" style="width:38px"/></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
-            <div class="cell-editable"><input class="inline-input amber-inp deduct-inp" id="l-a-ded" type="text" value="8%" /></div>
+            <div class="cell-editable"><input class="inline-input amber-inp deduct-inp" oninput="sanitizeInput(this)" id="l-a-ded" type="number" value="8"  min="0" max="100" /><span class="cond-prefix">%</span></div>
           </td>
 
           <!-- Process Amber -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><input class="inline-input amber-inp" id="p-a-cond1" type="text" value="65%" style="width:38px"/> <span class="cond-prefix">to</span> <input class="inline-input amber-inp" id="p-a-cond2" type="text" value="80%" style="width:38px"/></div>
+            <div class="cell-editable"><input class="inline-input amber-inp" oninput="sanitizeInput(this)" id="p-a-cond1" type="number" value="65" min="0" max="100" style="width:38px"/> <span class="cond-prefix">to</span> <input class="inline-input amber-inp" oninput="sanitizeInput(this)" id="p-a-cond2" type="number" value="80" min="0" max="100" style="width:38px"/></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
-            <div class="cell-editable"><input class="inline-input amber-inp deduct-inp" id="p-a-ded" type="text" value="8%" /></div>
+            <div class="cell-editable"><input class="inline-input amber-inp deduct-inp" oninput="sanitizeInput(this)" id="p-a-ded" type="number" value="8"  min="0" max="100" /><span class="cond-prefix">%</span></div>
           </td>
         </tr>
 
@@ -640,41 +659,41 @@
           <!-- Refund Red -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><span class="cond-prefix">Above </span><input class="inline-input red-inp" id="r-r-cond" type="text" value="20%" /></div>
+            <div class="cell-editable"><span class="cond-prefix">Above </span><input class="inline-input red-inp" oninput="sanitizeInput(this)" id="r-r-cond" type="number" value="20" min="0" max="100" /></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
-            <div class="cell-editable"><input class="inline-input red-inp deduct-inp" id="r-r-ded" type="text" value="25%" /></div>
+            <div class="cell-editable"><input class="inline-input red-inp deduct-inp" oninput="sanitizeInput(this)" id="r-r-ded" type="number" value="25" min="0" max="100" /><span class="cond-prefix">%</span></div>
           </td>
 
           <!-- Attrition Red -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><span class="cond-prefix">Above </span><input class="inline-input red-inp" id="a-r-cond" type="text" value="15%" /></div>
+            <div class="cell-editable"><span class="cond-prefix">Above </span><input class="inline-input red-inp" oninput="sanitizeInput(this)" id="a-r-cond" type="number" value="15" min="0" max="100" /></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
-            <div class="cell-editable"><input class="inline-input red-inp deduct-inp" id="a-r-ded" type="text" value="20%" /></div>
+            <div class="cell-editable"><input class="inline-input red-inp deduct-inp" oninput="sanitizeInput(this)" id="a-r-ded" type="number" value="20" min="0" max="100" /><span class="cond-prefix">%</span></div>
           </td>
 
           <!-- Forecast Red -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><span class="cond-prefix">Below </span><input class="inline-input red-inp" id="f-r-cond" type="text" value="65%" /></div>
+            <div class="cell-editable"><span class="cond-prefix">Below </span><input class="inline-input red-inp" oninput="sanitizeInput(this)" id="f-r-cond" type="number" value="65" min="0" max="100" /></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
-            <div class="cell-editable"><input class="inline-input red-inp deduct-inp" id="f-r-ded" type="text" value="20%" /></div>
+            <div class="cell-editable"><input class="inline-input red-inp deduct-inp" oninput="sanitizeInput(this)" id="f-r-ded" type="number" value="20" min="0" max="100" /><span class="cond-prefix">%</span></div>
           </td>
 
           <!-- Leads Red -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><span class="cond-prefix">Below </span><input class="inline-input red-inp" id="l-r-cond" type="text" value="60%" /></div>
+            <div class="cell-editable"><span class="cond-prefix">Below </span><input class="inline-input red-inp" oninput="sanitizeInput(this)" id="l-r-cond" type="number" value="60" min="0" max="100" /></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
-            <div class="cell-editable"><input class="inline-input red-inp deduct-inp" id="l-r-ded" type="text" value="18%" /></div>
+            <div class="cell-editable"><input class="inline-input red-inp deduct-inp" oninput="sanitizeInput(this)" id="l-r-ded" type="number" value="18" min="0" max="100" /><span class="cond-prefix">%</span></div>
           </td>
 
           <!-- Process Red -->
           <td class="td-cell">
             <div class="cell-label">Condition</div>
-            <div class="cell-editable"><span class="cond-prefix">Below </span><input class="inline-input red-inp" id="p-r-cond" type="text" value="65%" /></div>
+            <div class="cell-editable"><span class="cond-prefix">Below </span><input class="inline-input red-inp" oninput="sanitizeInput(this)" id="p-r-cond" type="number" value="65" min="0" max="100" /></div>
             <div class="cell-label" style="margin-top:5px">Deduction</div>
-            <div class="cell-editable"><input class="inline-input red-inp deduct-inp" id="p-r-ded" type="text" value="18%" /></div>
+            <div class="cell-editable"><input class="inline-input red-inp deduct-inp" oninput="sanitizeInput(this)" id="p-r-ded" type="number" value="18" min="0" max="100" /><span class="cond-prefix">%</span></div>
           </td>
         </tr>
 
@@ -714,7 +733,7 @@
           </div>
 
           <div class="input-group">
-            <label>Base Amount per Sale (₹)</label>
+            <label>Base Amount per Sale (₹) <span style="opacity:0.5;font-size:0.65rem">— or edit in table above</span></label>
             <input type="number" id="inp-base" placeholder="e.g. 1500" min="0">
           </div>
 
@@ -799,14 +818,14 @@ function getPolicyFromTable() {
   };
 }
 
-// Helper: strip % from input values for display purposes
-document.querySelectorAll && document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.inline-input').forEach(inp => {
-    inp.addEventListener('input', () => {
-      inp.value = inp.value.replace(/[^0-9.%]/g,'');
-    });
-  });
-});
+// Sanitize inline inputs — clamp to 0-100 for % fields
+function sanitizeInput(el) {
+  let v = parseFloat(el.value);
+  if (isNaN(v)) return;
+  if (el.id === 'base-amount') return; // no cap for base amount
+  if (v < 0)   el.value = 0;
+  if (v > 100) el.value = 100;
+}
 
 function getZone(p, value) {
   if (p.lower_is_better) {
@@ -844,7 +863,7 @@ function fmt(n) {
 
 function calculate() {
   const sales    = parseFloat(document.getElementById('inp-sales').value);
-  const base     = parseFloat(document.getElementById('inp-base').value);
+  const base     = parseFloat(document.getElementById('base-amount').value) || parseFloat(document.getElementById('inp-base').value);
   const refund   = parseFloat(document.getElementById('inp-refund').value);
   const attrition= parseFloat(document.getElementById('inp-attrition').value);
   const forecast = parseFloat(document.getElementById('inp-forecast').value);
